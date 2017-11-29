@@ -2,20 +2,17 @@ package beam.physsim.jdeqsim.akka;
 
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import akka.actor.UntypedActor;
 import beam.router.BeamRouter;
 import beam.utils.DebugLib;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.population.Population;
 import org.matsim.core.api.experimental.events.EventsManager;
-import org.matsim.core.config.groups.TravelTimeCalculatorConfigGroup;
 import org.matsim.core.mobsim.jdeqsim.JDEQSimConfigGroup;
 import org.matsim.core.trafficmonitoring.TravelTimeCalculator;
-
 import org.matsim.core.utils.collections.Tuple;
 
 
-public class JDEQSimActor extends UntypedActor {
+public class JDEQSimActor extends GenericActor {
 
     public static final String START_PHYSSIM = "startPhyssim";
     private JDEQSimulation jdeqSimulation;
@@ -44,7 +41,7 @@ public class JDEQSimActor extends UntypedActor {
 
 
     @Override
-    public void onReceive(Object message) throws Exception {
+    public void receive(Object message) {
 
         if (message instanceof Tuple) {
             Tuple tuple = (Tuple) message;

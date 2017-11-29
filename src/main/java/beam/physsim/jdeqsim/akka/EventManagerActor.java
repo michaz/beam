@@ -2,19 +2,15 @@ package beam.physsim.jdeqsim.akka;
 
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import akka.actor.UntypedActor;
 import beam.utils.DebugLib;
 import org.matsim.api.core.v01.events.Event;
 import org.matsim.api.core.v01.network.Network;
 import org.matsim.core.api.experimental.events.EventsManager;
 import org.matsim.core.config.groups.TravelTimeCalculatorConfigGroup;
 import org.matsim.core.events.EventsManagerImpl;
-import org.matsim.core.events.handler.EventHandler;
 import org.matsim.core.trafficmonitoring.TravelTimeCalculator;
 
-import java.util.LinkedList;
-
-public class EventManagerActor extends UntypedActor {
+public class EventManagerActor extends GenericActor {
 
     ActorRef jdeqsimActorREF;
     public static final String LAST_MESSAGE = "lastMessage";
@@ -29,6 +25,9 @@ public class EventManagerActor extends UntypedActor {
         resetEventsActor();
     }
 
+    //An exception or error caused a run to abort: akka.event.jul.JavaLoggingFilter
+
+
     private void resetEventsActor(){
         eventsManager=new EventsManagerImpl();
         TravelTimeCalculatorConfigGroup ttccg = new TravelTimeCalculatorConfigGroup();
@@ -37,7 +36,7 @@ public class EventManagerActor extends UntypedActor {
     }
 
     @Override
-    public void onReceive(Object msg) throws Exception {
+    public void receive(Object msg){
         if (msg instanceof Event) {
             eventsManager.processEvent((Event) msg);
         } else if (msg instanceof String) {

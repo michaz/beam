@@ -3,6 +3,7 @@ package beam.router
 import java.util.UUID
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props, Stash, Terminated}
+import akka.event.LoggingReceive
 import akka.routing._
 import beam.agentsim.agents.PersonAgent
 import beam.agentsim.agents.vehicles.BeamVehicle.StreetVehicle
@@ -35,7 +36,7 @@ class BeamRouter(services: BeamServices, fareCalculator: FareCalculator) extends
   def receive = uninitialized
 
   // Uninitialized state
-  def uninitialized: Receive = {
+  def uninitialized: Receive = LoggingReceive{
     case InitializeRouter =>
       log.info("Initializing Router.")
       networkCoordinator.forward(InitializeRouter)
@@ -49,7 +50,7 @@ class BeamRouter(services: BeamServices, fareCalculator: FareCalculator) extends
   }
 
   // Initializing state
-  def initializing: Receive = {
+  def initializing: Receive = LoggingReceive{
     case InitializeRouter =>
       log.debug("Router initialization in-progress...")
       stash()
@@ -67,7 +68,7 @@ class BeamRouter(services: BeamServices, fareCalculator: FareCalculator) extends
   }
 
   // Initialized state
-  def initialized: Receive = {
+  def initialized: Receive = LoggingReceive{
     case w: RoutingRequest =>
       router.route(w, sender())
     case InitTransit =>

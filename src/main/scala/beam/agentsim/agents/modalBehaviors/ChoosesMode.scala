@@ -89,7 +89,8 @@ trait ChoosesMode extends BeamAgent[PersonData] with HasServices {
           }
         case _ =>
           val (tick, theTriggerId) = releaseTickAndTriggerId()
-          stop(Failure("no alternatives found"))
+          log.error("****************no alternatives found**********************")
+          stop(Failure(new RuntimeException("Find me")))
       }
     } else {
       stay()

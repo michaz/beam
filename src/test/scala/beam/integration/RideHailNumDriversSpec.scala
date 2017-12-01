@@ -2,6 +2,10 @@ package beam.integration
 
 import beam.sim.RunBeam
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.core.LoggerContext
+import beam.log.listener.MyCustomImpl
+
 
 /**
   * Created by fdariasm on 29/08/2017
@@ -29,6 +33,17 @@ class RideHailNumDriversSpec extends WordSpecLike with Matchers with RunBeam wit
 //      println(z1)
 //      println(z2)
 //      println(zip)
+
+      val logMessages = LogManager
+        .getContext(false)
+        .asInstanceOf[LoggerContext]
+        .getConfiguration
+        .getAppenders
+        .get("myapp").
+        asInstanceOf[MyCustomImpl].getMessages
+
+      val contains = logMessages.contains("no alternatives found")
+      contains shouldBe false
 
       isOrdered(tc)((a, b) => a <= b) shouldBe true
     }

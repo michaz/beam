@@ -53,6 +53,9 @@ class EventsFileSpec extends FlatSpec with Matchers with RunBeam with
 
   "Events file contains same pathTraversal defined at stop times file for train input file" should behave like containsSameTrainEntriesPathTraversal(trainStopTimesFile,xmlFile,new ReadEventsBeam)
 
+  "Events file conains an events sequence correct" should behave like sequenceOfEventsIsCorrect(xmlFile, new ReadEventsBeam)
+
+
   private def fileExists(file: File) = {
     it should " exists in output directory" in {
       file.exists() shouldBe true
@@ -122,6 +125,19 @@ class EventsFileSpec extends FlatSpec with Matchers with RunBeam with
       groupedXmlWithCount should contain theSameElementsAs groupedWithCount
     }
   }
+
+  private def sequenceOfEventsIsCorrect (eventsFile: File, eventsReader: ReadEvents) = {
+
+    it should "event time is in ascending sequence " in {
+      val listValueTagEventFile = eventsReader.getListTagsFromFile(eventsFile, tagToReturn="time")
+
+      listValueTagEventFile shouldBe sorted
+
+    }
+
+  }
+
+
 
 }
 

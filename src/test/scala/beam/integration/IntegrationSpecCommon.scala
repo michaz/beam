@@ -21,7 +21,8 @@ trait IntegrationSpecCommon {
                  transitPrice: Option[Double] = None,
                  tollPrice: Option[Double] = None,
                  rideHailPrice: Option[Double] = None,
-                 eventsFileOutputFormats: Option[String] = None) = {
+                 eventsFileOutputFormats: Option[String] = None,
+                 modeChoiceParameters: Option[String] = None) = {
     ConfigModule.ConfigFileName = configFileName
 
     ConfigModule.beamConfig.copy(
@@ -29,7 +30,8 @@ trait IntegrationSpecCommon {
         agentsim = ConfigModule.beamConfig.beam.agentsim.copy(
           agents = ConfigModule.beamConfig.beam.agentsim.agents.copy(
             modalBehaviors = ConfigModule.beamConfig.beam.agentsim.agents.modalBehaviors.copy(
-              modeChoiceClass = modeChoice.getOrElse(ConfigModule.beamConfig.beam.agentsim.agents.modalBehaviors.modeChoiceClass)
+              modeChoiceClass = modeChoice.getOrElse(ConfigModule.beamConfig.beam.agentsim.agents.modalBehaviors.modeChoiceClass),
+              modeChoiceParametersFile = modeChoiceParameters.getOrElse(ConfigModule.beamConfig.beam.agentsim.agents.modalBehaviors.modeChoiceParametersFile),
             ), rideHailing = ConfigModule.beamConfig.beam.agentsim.agents.rideHailing.copy(
               defaultCostPerMile = defaultCostPerMile.getOrElse(ConfigModule.beamConfig.beam.agentsim.agents.rideHailing.defaultCostPerMile),
               defaultCostPerMinute = defaultCostPerMinute.getOrElse(ConfigModule.beamConfig.beam.agentsim.agents.rideHailing.defaultCostPerMinute),

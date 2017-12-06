@@ -15,12 +15,13 @@ class StartWithCustomConfig(
                              transitCapacity: Option[Double] = None,
                              transitPrice: Option[Double] = None,
                              tollPrice: Option[Double] = None,
-                             rideHailPrice: Option[Double] = None) extends
+                             rideHailPrice: Option[Double] = None,
+                             modeChoiceParameters: Option[String] = None) extends
   EventsFileHandlingCommon with IntegrationSpecCommon with RunBeam {
   lazy val configFileName = Some(s"${System.getenv("PWD")}/test/input/beamville/beam.conf")
 
   val beamConfig = customBeam(configFileName, modeChoice, numDriversAsFractionOfPopulation,
-  defaultCostPerMile,defaultCostPerMinute,transitCapacity,transitPrice,tollPrice,rideHailPrice)
+  defaultCostPerMile,defaultCostPerMinute,transitCapacity,transitPrice,tollPrice,rideHailPrice, modeChoiceParameters = modeChoiceParameters)
 
   val exec = Try(runBeamWithConfig(beamConfig, ConfigModule.matSimConfig))
 

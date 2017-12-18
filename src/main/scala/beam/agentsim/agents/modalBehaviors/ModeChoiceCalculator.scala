@@ -57,6 +57,9 @@ object ModeChoiceCalculator {
         new ModeChoiceUniformRandom(beamServices)
       case "ModeChoiceMultinomialLogit" =>
         ModeChoiceMultinomialLogit(beamServices)
+      case "ModeChoiceMultinomialLogitTest" =>
+        ModeChoiceMultinomialLogit.fromContentString(beamServices,
+          beamServices.beamConfig.beam.agentsim.agents.modalBehaviors.modeChoiceParametersFile)
     }
   }
   case class AttributesOfIndividual(householdIncome: Double, householdSize: Int, isMale: Boolean, numCars: Int, numBikes: Int)

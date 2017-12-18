@@ -1,6 +1,6 @@
 package beam.agentsim.agents.choice.mode
 
-import java.io.File
+import java.io.{ByteArrayInputStream, File, FileInputStream, InputStream}
 import java.util
 import java.util.{LinkedHashMap, Random}
 
@@ -144,10 +144,20 @@ object ModeChoiceMultinomialLogit {
     new ModeChoiceMultinomialLogit(beamServices,ModeChoiceMultinomialLogit.parseInputForMNL(beamServices))
   }
 
-  def parseInputForMNL(beamServices: BeamServices): MulitnomialLogit = {
-    val modeChoiceParametersFile = beamServices.beamConfig.beam.agentsim.agents.modalBehaviors.modeChoiceParametersFile
+  def fromContentString(beamServices: BeamServices, content: String): ModeChoiceMultinomialLogit = {
+    val is = new ByteArrayInputStream(content.getBytes("UTF-8"))
+
+    parseFromInputStream(is) match {
+      case Some(theModel) =>
+        new ModeChoiceMultinomialLogit(beamServices, theModel)
+      case None =>
+        throw new RuntimeException(s"Cannot find a mode choice model of type ModeChoiceMultinomialLogit in content: ${content}")
+    }
+  }
+
+  def parseFromInputStream(is: InputStream): Option[MulitnomialLogit] = {
     val builder: SAXBuilder = new SAXBuilder()
-    val document: Document = builder.build(new File(modeChoiceParametersFile)).asInstanceOf[Document]
+    val document: Document = builder.build(is).asInstanceOf[Document]
     var theModelOpt: Option[MulitnomialLogit] = None
 
     document.getRootElement.getChildren.asScala.foreach{child =>
@@ -156,6 +166,15 @@ object ModeChoiceMultinomialLogit {
         theModelOpt = Some(MulitnomialLogit.MulitnomialLogitFactory(rootNode))
       }
     }
+
+    theModelOpt
+  }
+
+  def parseInputForMNL(beamServices: BeamServices): MulitnomialLogit = {
+    val modeChoiceParametersFile = beamServices.beamConfig.beam.agentsim.agents.modalBehaviors.modeChoiceParametersFile
+
+    val theModelOpt = parseFromInputStream(new FileInputStream(new File(modeChoiceParametersFile)))
+
     theModelOpt match {
       case Some(theModel) =>
         theModel

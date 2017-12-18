@@ -121,14 +121,34 @@ class MultinomialCustomConfigSpec extends WordSpecLike with Matchers with RunBea
 
     "Prefer mode choice bike type in positive values than negative values " in {
 
-      val routeConfig1 = Some(s"${System.getenv("PWD")}/test/input/beamville/r5/ModeChoiceParametersTest/modeChoiceParametersBike1.xml")
-      val routeConfig2 = Some(s"${System.getenv("PWD")}/test/input/beamville/r5/ModeChoiceParametersTest/modeChoiceParametersBike2.xml")
+      val transformer1 = new RuleTransformer(
+        new MultinomialCustomConfigSpec.CustomAlternative("bike", Seq(
+          MultinomialCustomConfigSpec.Utility("intercept", "INTERCEPT", "100"),
+          MultinomialCustomConfigSpec.Utility("cost", "MULTIPLIER", "100"),
+          MultinomialCustomConfigSpec.Utility("time", "MULTIPLIER", "100")
+        ))
+      )
 
-      val carConfigPositive = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogit") ,modeChoiceParameters = routeConfig1)
-      val carConfigNegative = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogit") ,modeChoiceParameters = routeConfig2)
+      val transformer2 = new RuleTransformer(
+        new MultinomialCustomConfigSpec.CustomAlternative("bike", Seq(
+          MultinomialCustomConfigSpec.Utility("intercept", "INTERCEPT", "-100"),
+          MultinomialCustomConfigSpec.Utility("cost", "MULTIPLIER", "-100"),
+          MultinomialCustomConfigSpec.Utility("time", "MULTIPLIER", "-100")
+        ))
+      )
 
-      val countPositive = carConfigPositive.groupedCount.get("bike").getOrElse(0);
-      val countNegative = carConfigNegative.groupedCount.get("bike").getOrElse(0);
+      val transformed1 = transformer1(MultinomialCustomConfigSpec.baseXml)
+      val transformed2 = transformer2(MultinomialCustomConfigSpec.baseXml)
+
+      val routeConfig1 = Some(MultinomialCustomConfigSpec.fullXml(transformed1).toString())
+      val routeConfig2 = Some(MultinomialCustomConfigSpec.fullXml(transformed2).toString())
+
+
+      val bikeConfigPositive = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogitTest") ,modeChoiceParameters = routeConfig1)
+      val bikeConfigNegative = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogitTest") ,modeChoiceParameters = routeConfig2)
+
+      val countPositive = bikeConfigPositive.groupedCount.get("bike").getOrElse(0);
+      val countNegative = bikeConfigNegative.groupedCount.get("bike").getOrElse(0);
 
       println("Bike __________>")
       println("Positive: " + countPositive)
@@ -140,14 +160,34 @@ class MultinomialCustomConfigSpec extends WordSpecLike with Matchers with RunBea
 
     "Prefer mode choice ride hailing type in positive values than negative values " in {
 
-      val routeConfig1 = Some(s"${System.getenv("PWD")}/test/input/beamville/r5/ModeChoiceParametersTest/modeChoiceParametersRideHailing1.xml")
-      val routeConfig2 = Some(s"${System.getenv("PWD")}/test/input/beamville/r5/ModeChoiceParametersTest/modeChoiceParametersRideHailing2.xml")
+      val transformer1 = new RuleTransformer(
+        new MultinomialCustomConfigSpec.CustomAlternative("ride_hailing", Seq(
+          MultinomialCustomConfigSpec.Utility("intercept", "INTERCEPT", "100"),
+          MultinomialCustomConfigSpec.Utility("cost", "MULTIPLIER", "100"),
+          MultinomialCustomConfigSpec.Utility("time", "MULTIPLIER", "100")
+        ))
+      )
 
-      val carConfigPositive = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogit") ,modeChoiceParameters = routeConfig1)
-      val carConfigNegative = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogit") ,modeChoiceParameters = routeConfig2)
+      val transformer2 = new RuleTransformer(
+        new MultinomialCustomConfigSpec.CustomAlternative("ride_hailing", Seq(
+          MultinomialCustomConfigSpec.Utility("intercept", "INTERCEPT", "-100"),
+          MultinomialCustomConfigSpec.Utility("cost", "MULTIPLIER", "-100"),
+          MultinomialCustomConfigSpec.Utility("time", "MULTIPLIER", "-100")
+        ))
+      )
 
-      val countPositive = carConfigPositive.groupedCount.get("ride_hailing").getOrElse(0);
-      val countNegative = carConfigNegative.groupedCount.get("ride_hailing").getOrElse(0);
+      val transformed1 = transformer1(MultinomialCustomConfigSpec.baseXml)
+      val transformed2 = transformer2(MultinomialCustomConfigSpec.baseXml)
+
+      val routeConfig1 = Some(MultinomialCustomConfigSpec.fullXml(transformed1).toString())
+      val routeConfig2 = Some(MultinomialCustomConfigSpec.fullXml(transformed2).toString())
+
+
+      val rideConfigPositive = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogitTest") ,modeChoiceParameters = routeConfig1)
+      val rideConfigNegative = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogitTest") ,modeChoiceParameters = routeConfig2)
+
+      val countPositive = rideConfigPositive.groupedCount.get("ride_hailing").getOrElse(0);
+      val countNegative = rideConfigNegative.groupedCount.get("ride_hailing").getOrElse(0);
 
       println("Ride Hailing __________>")
       println("Positive: " + countPositive)
@@ -159,14 +199,34 @@ class MultinomialCustomConfigSpec extends WordSpecLike with Matchers with RunBea
 
     "Prefer mode choice transit type in positive values than negative values " in {
 
-      val routeConfig1 = Some(s"${System.getenv("PWD")}/test/input/beamville/r5/ModeChoiceParametersTest/modeChoiceParametersTransit1.xml")
-      val routeConfig2 = Some(s"${System.getenv("PWD")}/test/input/beamville/r5/ModeChoiceParametersTest/modeChoiceParametersTransit2.xml")
+      val transformer1 = new RuleTransformer(
+        new MultinomialCustomConfigSpec.CustomAlternative("transit", Seq(
+          MultinomialCustomConfigSpec.Utility("intercept", "INTERCEPT", "100"),
+          MultinomialCustomConfigSpec.Utility("cost", "MULTIPLIER", "100"),
+          MultinomialCustomConfigSpec.Utility("time", "MULTIPLIER", "100")
+        ))
+      )
 
-      val carConfigPositive = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogit") ,modeChoiceParameters = routeConfig1)
-      val carConfigNegative = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogit") ,modeChoiceParameters = routeConfig2)
+      val transformer2 = new RuleTransformer(
+        new MultinomialCustomConfigSpec.CustomAlternative("transit", Seq(
+          MultinomialCustomConfigSpec.Utility("intercept", "INTERCEPT", "-100"),
+          MultinomialCustomConfigSpec.Utility("cost", "MULTIPLIER", "-100"),
+          MultinomialCustomConfigSpec.Utility("time", "MULTIPLIER", "-100")
+        ))
+      )
 
-      val countPositive = carConfigPositive.groupedCount.get("transit").getOrElse(0);
-      val countNegative = carConfigNegative.groupedCount.get("transit").getOrElse(0);
+      val transformed1 = transformer1(MultinomialCustomConfigSpec.baseXml)
+      val transformed2 = transformer2(MultinomialCustomConfigSpec.baseXml)
+
+      val routeConfig1 = Some(MultinomialCustomConfigSpec.fullXml(transformed1).toString())
+      val routeConfig2 = Some(MultinomialCustomConfigSpec.fullXml(transformed2).toString())
+
+
+      val transitConfigPositive = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogitTest") ,modeChoiceParameters = routeConfig1)
+      val transitConfigNegative = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogitTest") ,modeChoiceParameters = routeConfig2)
+
+      val countPositive = transitConfigPositive.groupedCount.get("transit").getOrElse(0);
+      val countNegative = transitConfigNegative.groupedCount.get("transit").getOrElse(0);
 
       println("Transit __________>")
       println("Positive: " + countPositive)
@@ -178,14 +238,34 @@ class MultinomialCustomConfigSpec extends WordSpecLike with Matchers with RunBea
 
     "Prefer mode choice walk type in positive values than negative values " in {
 
-      val routeConfig1 = Some(s"${System.getenv("PWD")}/test/input/beamville/r5/ModeChoiceParametersTest/modeChoiceParametersWalk1.xml")
-      val routeConfig2 = Some(s"${System.getenv("PWD")}/test/input/beamville/r5/ModeChoiceParametersTest/modeChoiceParametersWalk2.xml")
+      val transformer1 = new RuleTransformer(
+        new MultinomialCustomConfigSpec.CustomAlternative("walk", Seq(
+          MultinomialCustomConfigSpec.Utility("intercept", "INTERCEPT", "100"),
+          MultinomialCustomConfigSpec.Utility("cost", "MULTIPLIER", "100"),
+          MultinomialCustomConfigSpec.Utility("time", "MULTIPLIER", "100")
+        ))
+      )
 
-      val carConfigPositive = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogit") ,modeChoiceParameters = routeConfig1)
-      val carConfigNegative = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogit") ,modeChoiceParameters = routeConfig2)
+      val transformer2 = new RuleTransformer(
+        new MultinomialCustomConfigSpec.CustomAlternative("walk", Seq(
+          MultinomialCustomConfigSpec.Utility("intercept", "INTERCEPT", "-100"),
+          MultinomialCustomConfigSpec.Utility("cost", "MULTIPLIER", "-100"),
+          MultinomialCustomConfigSpec.Utility("time", "MULTIPLIER", "-100")
+        ))
+      )
 
-      val countPositive = carConfigPositive.groupedCount.get("walk").getOrElse(0);
-      val countNegative = carConfigNegative.groupedCount.get("walk").getOrElse(0);
+      val transformed1 = transformer1(MultinomialCustomConfigSpec.baseXml)
+      val transformed2 = transformer2(MultinomialCustomConfigSpec.baseXml)
+
+      val routeConfig1 = Some(MultinomialCustomConfigSpec.fullXml(transformed1).toString())
+      val routeConfig2 = Some(MultinomialCustomConfigSpec.fullXml(transformed2).toString())
+
+
+      val walkConfigPositive = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogitTest") ,modeChoiceParameters = routeConfig1)
+      val walkConfigNegative = new StartWithCustomConfig(modeChoice = Some("ModeChoiceMultinomialLogitTest") ,modeChoiceParameters = routeConfig2)
+
+      val countPositive = walkConfigPositive.groupedCount.get("walk").getOrElse(0);
+      val countNegative = walkConfigNegative.groupedCount.get("walk").getOrElse(0);
 
       println("WAlk __________>")
       println("Positive: " + countPositive)
@@ -194,10 +274,6 @@ class MultinomialCustomConfigSpec extends WordSpecLike with Matchers with RunBea
 
       countPositive should be >= countNegative
     }
-
-
-
-
 
   }
 

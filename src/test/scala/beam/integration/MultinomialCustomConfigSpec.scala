@@ -24,8 +24,7 @@ object MultinomialCustomConfigSpec  {
   }
 
 
-  def fullXml(parameters: Node) = <?xml version="1.0" encoding="utf-8"?>
-    <modeChoices>
+  def fullXml(parameters: Node) = <modeChoices>
       <lccm>
         <name>Latent Class Choice Model</name>
         <parameters>lccm-long.csv</parameters>
@@ -86,17 +85,17 @@ class MultinomialCustomConfigSpec extends WordSpecLike with Matchers with RunBea
 
       val transformer1 = new RuleTransformer(
         new MultinomialCustomConfigSpec.CustomAlternative("car", Seq(
-          MultinomialCustomConfigSpec.Utility("intercept", "INTERCEPT", "-100"),
-          MultinomialCustomConfigSpec.Utility("cost", "MULTIPLIER", "-100"),
-          MultinomialCustomConfigSpec.Utility("time", "MULTIPLIER", "-100")
+          MultinomialCustomConfigSpec.Utility("intercept", "INTERCEPT", "100"),
+          MultinomialCustomConfigSpec.Utility("cost", "MULTIPLIER", "100"),
+          MultinomialCustomConfigSpec.Utility("time", "MULTIPLIER", "100")
         ))
       )
 
       val transformer2 = new RuleTransformer(
         new MultinomialCustomConfigSpec.CustomAlternative("car", Seq(
-          MultinomialCustomConfigSpec.Utility("intercept", "INTERCEPT", "100"),
-          MultinomialCustomConfigSpec.Utility("cost", "MULTIPLIER", "100"),
-          MultinomialCustomConfigSpec.Utility("time", "MULTIPLIER", "100")
+          MultinomialCustomConfigSpec.Utility("intercept", "INTERCEPT", "-100"),
+          MultinomialCustomConfigSpec.Utility("cost", "MULTIPLIER", "-100"),
+          MultinomialCustomConfigSpec.Utility("time", "MULTIPLIER", "-100")
         ))
       )
 

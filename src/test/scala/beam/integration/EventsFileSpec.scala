@@ -7,6 +7,7 @@ import beam.sim.config.ConfigModule
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.util.Try
+import scala.xml._
 
 /**
   * Created by fdariasm on 29/08/2017
@@ -17,7 +18,7 @@ class EventsFileSpec extends FlatSpec with Matchers with RunBeam with
   EventsFileHandlingCommon with IntegrationSpecCommon{
   lazy val configFileName = Some(s"${System.getenv("PWD")}/test/input/beamville/beam.conf")
 
-  lazy val beamConfig = customBeam(configFileName, eventsFileOutputFormats = Some("xml,csv"))
+  lazy val beamConfig = customBeam(configFileName, eventsFileOutputFormats = Some("xml,csv"), defaultLoggingLevel= Some("VERBOSE"))
 
   val exc = Try(runBeamWithConfig(beamConfig, ConfigModule.matSimConfig))
   val xmlFile: File = getRouteFile(beamConfig.beam.outputs.outputDirectory , "xml")
@@ -32,6 +33,9 @@ class EventsFileSpec extends FlatSpec with Matchers with RunBeam with
 
   val busStopTimesFile = new File(s"$route_input/r5/bus/stop_times.txt")
   val trainStopTimesFile = new File(s"$route_input/r5/train/stop_times.txt")
+
+
+  val householdsFile = XML.loadFile(s"$route_input/households.xml")
 
   it should "BEAM running without errors" in {
     exc.isSuccess shouldBe true
@@ -53,8 +57,9 @@ class EventsFileSpec extends FlatSpec with Matchers with RunBeam with
 
   "Events file contains same pathTraversal defined at stop times file for train input file" should behave like containsSameTrainEntriesPathTraversal(trainStopTimesFile,xmlFile,new ReadEventsBeam)
 
-  "Events file conains an events sequence correct" should behave like sequenceOfEventsIsCorrect(xmlFile, new ReadEventsBeam)
+  //"Events file contains an events sequence correct" should behave like sequenceOfEventsIsCorrect(xmlFile, new ReadEventsBeam)
 
+  "Events file make sure car used is owned by household" should behave like carUsedIsOwnedHousehold(householdsFile,xmlFile, new ReadEventsBeam)
 
   private def fileExists(file: File) = {
     it should " exists in output directory" in {
@@ -132,6 +137,42 @@ class EventsFileSpec extends FlatSpec with Matchers with RunBeam with
       val listValueTagEventFile = eventsReader.getListTagsFromFile(eventsFile, tagToReturn="time")
 
       listValueTagEventFile shouldBe sorted
+
+    }
+
+  }
+
+  private def carUsedIsOwnedHousehold (householdsFile: Elem,eventsFile: File, eventsReader: ReadEvents) = {
+
+    it should "car used is owned by household " in {
+
+      val householdSeq = householdsFile\\ "household"
+
+
+      val householdMap = householdSeq
+        .map(n=> n.attribute("id").get.toString() -> ((n \\ "members" \\ "personId")
+          .map(_.attribute("refId").get.toString())  , (n \\ "vehicles" \\ "vehicleDefinitionId")
+          .map(_.attribute("refId").get.toString())))
+        .toMap
+
+      val events = eventsReader.getListTwoTagsFromFile(eventsFile, Some("type", "PersonEntersVehicle"),tagToReturn="person",tagTwoToReturn = Some("vehicle"));
+
+
+      //val temo = householdMap.find{case (_, seqPersons,_ ) =>  seqPersons}
+      println(events);
+
+      println(householdMap);
+
+
+
+
+
+      //val mapVehiclePersona =
+      //val listValueTagEventFile = eventsReader.getListTagsFromFile(eventsFile, tagToReturn="PersonEntersVehicle")
+
+      //listValueTagEventFile shouldBe sorted
+      //
+      //TODO
 
     }
 

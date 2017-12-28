@@ -22,7 +22,8 @@ trait IntegrationSpecCommon {
                  tollPrice: Option[Double] = None,
                  rideHailPrice: Option[Double] = None,
                  eventsFileOutputFormats: Option[String] = None,
-                 modeChoiceParameters: Option[String] = None) = {
+                 modeChoiceParameters: Option[String] = None,
+                 defaultLoggingLevel: Option[String] = None) = {
     ConfigModule.ConfigFileName = configFileName
 
     ConfigModule.beamConfig.copy(
@@ -44,6 +45,7 @@ trait IntegrationSpecCommon {
             rideHailPrice = rideHailPrice.getOrElse(ConfigModule.beamConfig.beam.agentsim.tuning.rideHailPrice)
           )
         ), outputs = ConfigModule.beamConfig.beam.outputs.copy(
+          defaultLoggingLevel = defaultLoggingLevel.getOrElse(ConfigModule.beamConfig.beam.outputs.defaultLoggingLevel),
           eventsFileOutputFormats =  eventsFileOutputFormats.getOrElse("xml"),
           logging = ConfigModule.beamConfig.beam.outputs.logging.copy(
             beam = ConfigModule.beamConfig.beam.outputs.logging.beam.copy(
